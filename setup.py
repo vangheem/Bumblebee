@@ -4,7 +4,7 @@ import os
 version = '1.0a1'
 
 
-setup(name='bumblebee',
+setup(name='Bumblebee',
       version=version,
       description="deliverance-like implementation that only works on html output(no theme file)",
       long_description=open("README.txt").read() + "\n" +

@@ -8,7 +8,7 @@ setup(name='Bumblebee',
       version=version,
       description="deliverance-like implementation that only works on html output(no theme file)",
       long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "CHANGES.txt")).read(),
+                       open("CHANGES.txt").read(),
       classifiers=[],
       keywords='transform deliverance diazo lxml',
       author='Nathan Van Gheem',

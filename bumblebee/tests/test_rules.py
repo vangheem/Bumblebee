@@ -6,6 +6,7 @@ from bumblebee.rules import Drop
 from bumblebee.rules import Replace
 from bumblebee.rules import Class
 from bumblebee.rules import Group
+from bumblebee.rules import Tag
 from bumblebee.selectors import CSS
 from bumblebee.conditions import IfContent
 from repoze.xmliter.utils import getHTMLSerializer
@@ -82,6 +83,15 @@ class TestRules(unittest.TestCase):
 
         self.assertEquals(len(content(root)), 1)
         self.assertEquals(len(foobar(root)), 0)
+
+    def test_tag_rule(self):
+        root = self.get_root()
+        foobar = CSS('#footer')
+        tagrule = Tag(foobar, tag='p')
+        tagrule(root)
+
+        self.assertEquals(len(foobar(root)), 1)
+        self.assertEquals(foobar(root)[0].tag, 'p')
 
 if __name__ == '__main__':
     unittest.main()

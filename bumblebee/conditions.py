@@ -1,18 +1,15 @@
 
 
 class BaseIf(object):
-
-    def __init__(self, extras={}):
-        self.extras = extras
+    pass
 
 
 class IfContent(BaseIf):
 
-    def __init__(self, selector, extras={}):
-        super(IfContent, self).__init__(extras)
+    def __init__(self, selector):
         self.selector = selector
 
-    def __call__(self, root):
+    def __call__(self, root, extras):
         return len(self.selector(root)) > 0
 
 
@@ -21,5 +18,5 @@ class Not(object):
     def __init__(self, condition):
         self.condition = condition
 
-    def __call__(self, root):
-        return not self.condition(root)
+    def __call__(self, root, extras):
+        return not self.condition(root, extras)

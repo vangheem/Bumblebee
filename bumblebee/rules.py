@@ -1,8 +1,11 @@
 
 
-def spacedList(val):
+def spacedList(val, required=True):
     if not isinstance(val, basestring):
-        raise Exception("Expected string to work with.")
+        if required:
+            raise Exception("Expected string to work with.")
+        else:
+            return []
     if not val:
         return []
     return val.split(' ')
@@ -21,7 +24,7 @@ class Base(object):
 
     def skip(self, root):
         for condition in self.conditions:
-            if condition(root):
+            if condition(root, self.extras):
                 return False
             else:
                 return True
@@ -116,7 +119,7 @@ class Replace(BaseDouble):
     def __init__(self, src=None, dst=None, conditions=[],
                               attributes=None, extras={}):
         super(Replace, self).__init__(src, dst, conditions, extras)
-        self.attributes = spacedList(attributes)
+        self.attributes = spacedList(attributes, required=False)
 
     def __call__(self, root):
         src, dst, skip = self.process_nodes(root)
@@ -177,3 +180,18 @@ class Group(Base):
             return
         for rule in self.rules:
             rule(root)
+
+
+class Tag(BaseSingle):
+    def __init__(self, src=None, tag="", conditions=[], extras={}):
+        super(Tag, self).__init__(src, conditions, extras)
+        self.tag = notNone(tag)
+
+    def __call__(self, root):
+        src, skip = self.process_nodes(root)
+        if skip:
+            return
+
+        for el in src:
+            el.tag = self.tag
+        return src

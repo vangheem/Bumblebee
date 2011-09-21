@@ -62,9 +62,21 @@ Selectors
 For xml configuration that selects elements, you can use CSS selectors(default)
 or XPath.
 
-To use XPath, just append ':path' onto the node name::
+To use XPath, just append '-path' onto the node name::
 
-    <after src:xpath="/html/body/div[0]" src:xpath="/html/body/div[2]" />
+    <after src-xpath="/html/body/div[0]" src-xpath="/html/body/div[2]" />
+
+
+arbitrary html
+~~~~~~~~~~~~~~
+
+Use this to inject html into a page::
+
+    <after src-html="" dst="#foo">
+        <div id="foobar">
+            <h1>hello, world</h1>
+        </div>
+    </after>
 
 
 Rules
@@ -110,10 +122,39 @@ Class
 
 Add or remove classes from an element::
 
-    <class "#foo" add="three four" remove="one two" />
+    <class src="#foo" add="three four" remove="one two" />
 
 Remove the classes "one" and "two" from "#foo" and add
 the classes "three" and "four".
+
+
+Tag
+~~~
+
+Change a tag::
+
+    <tag src="#foo" tag="p" />
+
+
+Attributes
+~~~~~~~~~~
+
+Add, remove and replace attributes.
+
+To copy from another node::
+
+    <attributes src="#foo" dst="#bar" add="class style" remove="width" replace="id" />
+
+Adds the class and style attributes from src to dst, removes the
+width attribute from dst and replaces the dst id with the src id.
+
+
+Add them inline::
+
+    <attributes src="#foo" add="class=foo bar" replace="id=bar" />
+
+Add attribute class(if not present) and add "foo bar" to src and replace
+the id of src with "bar"
 
 
 Group
@@ -134,7 +175,9 @@ Conditions
 if-content
 ~~~~~~~~~~
 
-Performs actions if the selector is found in the document.
+Performs actions if the selector is found in the document::
+
+    <after src="#foo" dst="#bar" if-content="#foo" />
 
 
 not conditiion
@@ -183,6 +226,8 @@ Creating a Condition::
                 return path.startswith(self.path)
             else:
                 return self.path in path
+    from bumblebee.xml import addCondition
+    addCondition('path', IfPath)
 
 To use this condition, you would::
 

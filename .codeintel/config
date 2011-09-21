@@ -1,0 +1,8 @@
+{
+    "Python": {
+        "python": "/Users/nathan/python/python-2.6/bin/python",
+        "pythonExtraPaths": [
+            "/Applications/Plone4.1/zinstance/parts/omelette"
+        ]
+    }
+}

@@ -1,0 +1,8 @@
+CHANGELOG
+=========
+
+
+1.0a2 ~ (2011-09-22)
+--------------------
+
+- add tal and page template integration

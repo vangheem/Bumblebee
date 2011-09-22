@@ -136,27 +136,6 @@ Change a tag::
     <tag src="#foo" tag="p" />
 
 
-Attributes
-~~~~~~~~~~
-
-Add, remove and replace attributes.
-
-To copy from another node::
-
-    <attributes src="#foo" dst="#bar" add="class style" remove="width" replace="id" />
-
-Adds the class and style attributes from src to dst, removes the
-width attribute from dst and replaces the dst id with the src id.
-
-
-Add them inline::
-
-    <attributes src="#foo" add="class=foo bar" replace="id=bar" />
-
-Add attribute class(if not present) and add "foo bar" to src and replace
-the id of src with "bar"
-
-
 Group
 ~~~~~
 

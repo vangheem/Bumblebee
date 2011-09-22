@@ -18,13 +18,12 @@ def notNone(val):
 
 
 class Base(object):
-    def __init__(self, conditions=[], extras={}):
+    def __init__(self, conditions=[]):
         self.conditions = conditions
-        self.extras = extras
 
-    def skip(self, root):
+    def skip(self, root, extras={}):
         for condition in self.conditions:
-            if condition(root, self.extras):
+            if condition(root, extras):
                 return False
             else:
                 return True
@@ -33,12 +32,12 @@ class Base(object):
 
 class BaseSingle(Base):
 
-    def __init__(self, src=None, conditions=[], extras={}):
-        super(BaseSingle, self).__init__(conditions, extras)
+    def __init__(self, src=None, conditions=[]):
+        super(BaseSingle, self).__init__(conditions)
         self.src = notNone(src)
 
-    def process_nodes(self, root):
-        if self.skip(root):
+    def process_nodes(self, root, extras={}):
+        if self.skip(root, extras):
             return None, True
         src = self.src(root)
 
@@ -49,12 +48,12 @@ class BaseSingle(Base):
 
 class BaseDouble(BaseSingle):
 
-    def __init__(self, src=None, dst=None, conditions=[], extras={}):
-        super(BaseDouble, self).__init__(src, conditions, extras)
+    def __init__(self, src=None, dst=None, conditions=[]):
+        super(BaseDouble, self).__init__(src, conditions)
         self.dst = notNone(dst)
 
-    def process_nodes(self, root):
-        src, skip = super(BaseDouble, self).process_nodes(root)
+    def process_nodes(self, root, extras={}):
+        src, skip = super(BaseDouble, self).process_nodes(root, extras)
         dst = self.dst(root)
 
         if not dst:
@@ -68,8 +67,8 @@ class Before(BaseDouble):
     Move the src node before the dst node
     """
 
-    def __call__(self, root):
-        src, dst, skip = self.process_nodes(root)
+    def __call__(self, root, extras={}):
+        src, dst, skip = self.process_nodes(root, extras)
         if skip:
             return None
 
@@ -84,8 +83,8 @@ class After(BaseDouble):
     Move the src node after the dst node
     """
 
-    def __call__(self, root):
-        src, dst, skip = self.process_nodes(root)
+    def __call__(self, root, extras={}):
+        src, dst, skip = self.process_nodes(root, extras={})
         if skip:
             return None
         dst = dst[0]
@@ -100,8 +99,8 @@ class Drop(BaseSingle):
     Drop the src node.
     """
 
-    def __call__(self, root):
-        src, skip = self.process_nodes(root)
+    def __call__(self, root, extras={}):
+        src, skip = self.process_nodes(root, extras)
         if skip:
             return None
 
@@ -117,12 +116,12 @@ class Replace(BaseDouble):
     """
 
     def __init__(self, src=None, dst=None, conditions=[],
-                              attributes=None, extras={}):
-        super(Replace, self).__init__(src, dst, conditions, extras)
+                                           attributes=None):
+        super(Replace, self).__init__(src, dst, conditions)
         self.attributes = spacedList(attributes, required=False)
 
-    def __call__(self, root):
-        src, dst, skip = self.process_nodes(root)
+    def __call__(self, root, extras={}):
+        src, dst, skip = self.process_nodes(root, extras)
         if skip:
             return None
 
@@ -143,13 +142,13 @@ class Replace(BaseDouble):
 
 
 class Class(BaseSingle):
-    def __init__(self, src=None, remove='', add='', conditions=[], extras={}):
-        super(Class, self).__init__(src, conditions, extras)
+    def __init__(self, src=None, remove='', add='', conditions=[]):
+        super(Class, self).__init__(src, conditions)
         self.remove = spacedList(remove)
         self.add = spacedList(add)
 
-    def __call__(self, root):
-        src, skip = self.process_nodes(root)
+    def __call__(self, root, extras={}):
+        src, skip = self.process_nodes(root, extras)
         if skip:
             return None
         src = src[0]
@@ -171,24 +170,24 @@ class Class(BaseSingle):
 
 
 class Group(Base):
-    def __init__(self, rules=[], conditions=[], extras={}):
-        super(Group, self).__init__(conditions=conditions, extras=extras)
+    def __init__(self, rules=[], conditions=[]):
+        super(Group, self).__init__(conditions=conditions)
         self.rules = rules
 
-    def __call__(self, root):
-        if self.skip(root):
+    def __call__(self, root, extras={}):
+        if self.skip(root, extras):
             return
         for rule in self.rules:
             rule(root)
 
 
 class Tag(BaseSingle):
-    def __init__(self, src=None, tag="", conditions=[], extras={}):
-        super(Tag, self).__init__(src, conditions, extras)
+    def __init__(self, src=None, tag="", conditions=[]):
+        super(Tag, self).__init__(src, conditions)
         self.tag = notNone(tag)
 
-    def __call__(self, root):
-        src, skip = self.process_nodes(root)
+    def __call__(self, root, extras={}):
+        src, skip = self.process_nodes(root, extras)
         if skip:
             return
 

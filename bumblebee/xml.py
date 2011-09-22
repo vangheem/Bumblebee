@@ -70,12 +70,12 @@ def _removeall(val, *args):
     return val
 
 
-def getRuleFromNode(node, extras):
+def getRuleFromNode(node):
     if node.tag not in _tags:
         raise XMLUnknownTag("%s is unknown." % node.tag)
     rule_class = _tags[node.tag]
 
-    kwargs = {'conditions': [], 'extras': extras}
+    kwargs = {'conditions': []}
     for name, value in node.attrib.items():
         stripped_name = _removeall(name, 'if-', 'not-', \
                             *['-' + s for s in _selectors])
@@ -94,20 +94,20 @@ def getRuleFromNode(node, extras):
     if node.tag == 'group':
         rules = []
         for child in node.getchildren():
-            rule = getRuleFromNode(child, extras)
+            rule = getRuleFromNode(child)
             if rule:
                 rules.append(rule)
         kwargs['rules'] = rules
     return rule_class(**kwargs)
 
 
-def convertRules(xml, extras={}, raise_errors=False):
+def convertRules(xml, raise_errors=False):
     root = fromstring(xml)
 
     rules = []
     for node in root.getchildren():
         try:
-            rule = getRuleFromNode(node, extras)
+            rule = getRuleFromNode(node)
             if rule:
                 rules.append(rule)
         except:

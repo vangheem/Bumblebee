@@ -1,5 +1,4 @@
-from lxml.etree import fromstring
-
+from lxml.html import fromstring
 from bumblebee.rules import Before
 from bumblebee.rules import After
 from bumblebee.rules import Drop
@@ -103,7 +102,6 @@ def getRuleFromNode(node):
 
 def convertRules(xml, raise_errors=False):
     root = fromstring(xml)
-
     rules = []
     for node in root.getchildren():
         try:

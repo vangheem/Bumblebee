@@ -39,9 +39,9 @@ class BaseSingle(Base):
     def process_nodes(self, root, extras={}):
         if self.skip(root, extras):
             return None, True
-        src = self.src(root)
+        src = self.src(root, extras)
 
-        if not src:
+        if len(src) == 0:
             return src, True
         return src, False
 
@@ -54,7 +54,7 @@ class BaseDouble(BaseSingle):
 
     def process_nodes(self, root, extras={}):
         src, skip = super(BaseDouble, self).process_nodes(root, extras)
-        dst = self.dst(root)
+        dst = self.dst(root, extras)
 
         if not dst:
             skip = True
@@ -84,7 +84,7 @@ class After(BaseDouble):
     """
 
     def __call__(self, root, extras={}):
-        src, dst, skip = self.process_nodes(root, extras={})
+        src, dst, skip = self.process_nodes(root, extras)
         if skip:
             return None
         dst = dst[0]
@@ -178,7 +178,7 @@ class Group(Base):
         if self.skip(root, extras):
             return
         for rule in self.rules:
-            rule(root)
+            rule(root, extras)
 
 
 class Tag(BaseSingle):

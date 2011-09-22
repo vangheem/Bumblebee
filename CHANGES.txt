@@ -5,4 +5,11 @@ CHANGELOG
 1.0a2 ~ (2011-09-22)
 --------------------
 
-- add tal and page template integration
+- add support for arbitrary html
+
+- better support for adding new selectors, conditions, rules
+
+- better parsing
+
+- better handle extras parameters so that rules can be more
+  easily cached
